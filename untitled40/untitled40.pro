@@ -11,6 +11,9 @@ CONFIG += c++17
 SOURCES += \
     Bullet.cpp \
     Enemy.cpp \
+    Gamecontrol.cpp \
+    Gameobject.cpp \
+    Gameobjectpool.cpp \
     Player.cpp \
     fuxian.cpp \
     main.cpp \
@@ -19,6 +22,9 @@ SOURCES += \
 HEADERS += \
     Bullet.h \
     Enemy.h \
+    Gamecontrol.h \
+    Gameobject.h \
+    Gameobjectpool.h \
     Player.h \
     fuxian.h \
     widget.h
@@ -32,4 +38,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    resource.qrc
+    img.qrc

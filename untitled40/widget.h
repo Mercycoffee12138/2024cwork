@@ -41,10 +41,23 @@ public:
     void normalattackingmagic();
     void flyingmagic();
     void normaldefensemagic();
+    void flyingappearance();
+    void defensemagic();
 
     void CreatEnemy();
 
     void Enemyattckingmagic();
+    void fuxiandefensemagic();
+    void fuxiandefensemagicover();
+
+
+    void Collision_fuxian();
+    void Collision_fufu();
+
+
+    void start();
+    void backgroundchange();
+
 private:
     Ui::Widget *ui;
 
@@ -59,13 +72,21 @@ private:
 
 
     Player fufuplayer;
-    fuxian boss1;
+    fuxian *boss1=new fuxian;
     bool facingside=true;
     bool shoot=false;
     bool flying_condition=false;
+    bool flying_switch=false;
     bool defense_condition=false;
     bool defense_switch=false;
     bool attackingmagic_controller=false;
+
+    bool the_first=true;
+    bool the_second=false;
+
+    bool fuxiandefense_condition[8]={false,false,false,false,false,false,false,false};
+    bool start_condition=false;
+    bool changeend=true;
 
 
     QGraphicsPixmapItem mCloud;
@@ -73,6 +94,7 @@ private:
     QGraphicsPixmapItem mSky;
     QGraphicsPixmapItem background[10];
     QGraphicsPixmapItem Defensemagic;
+    QGraphicsPixmapItem fuxiandefense;
 
     //移动定时器
     QTimer*mbackgroundTimer;
@@ -88,6 +110,8 @@ private:
     QTimer*Enemyattckingmovetimer;
     QTimer*Enemyattackingcreattimer;
     QTimer*defensemagictimer;
+    QTimer*defenseusedmagictimer;
+    QTimer*Backgroundchangetimer;
     //容器
     QList<int>mKeyList1;
     QList<Bullet*>mBulletList_left;
@@ -95,6 +119,8 @@ private:
     QList<Bullet*>EnemyBulletList;
     QList<Enemy*>mEnemyList_left;
     QList<Enemy*>mEnemyList_right;
+    QList<fuxian*>mfuxianList;
+    QList<QGraphicsPixmapItem*>DefensemagicList;
 
     //背景音乐
     QMediaPlayer *mMeidaBG;

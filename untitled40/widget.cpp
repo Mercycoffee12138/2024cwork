@@ -35,7 +35,7 @@ Widget::Widget(QWidget *parent)
         this->mMeidaBG->play();
     });
     gamestart.addWidget(startbtn);
-
+      connect(startbtn,&QToolButton::clicked,this,&Widget::start);
 
 
 
@@ -45,8 +45,11 @@ Widget::Widget(QWidget *parent)
         mScene.addItem(&background[i]);
         background[i].setPos(1279*(i-4),0);
     }
+
+
+
     mCloud.setPixmap(QPixmap(":/background/Map/cloud1.png"));
-    Defensemagic.setPixmap(QPixmap(":/bullet/bullet/defense_001.png"));
+
     //设置位置
     mCloud.setPos(650,50);
     //player_right_001.setPos(250,340);
@@ -54,7 +57,7 @@ Widget::Widget(QWidget *parent)
 
     mScene.addItem(&mCloud);
     mScene.addItem(&fufuplayer.fufu);
-    mScene.addItem(&boss1.killingmagicstarter);
+
     //设置视图场景
     mGameview.setScene(&mScene);
     mGameview.setScene(&gamestart);
@@ -92,6 +95,8 @@ Widget::Widget(QWidget *parent)
         {
             bullet->BulletMove_left();
         }
+        Collision_fuxian();
+        Collision_fufu();
     });
 
     mEnemycreatTimer=new QTimer(this);
@@ -114,10 +119,12 @@ Widget::Widget(QWidget *parent)
     flying_timer=new QTimer(this);
     flying_timer->start(1000/144);
     connect(flying_timer,&QTimer::timeout,this,&Widget::flyingmagic);
+    connect(flying_timer,&QTimer::timeout,this,&Widget::flyingappearance);
 
     Enemyattackingcreattimer=new QTimer(this);
-    Enemyattackingcreattimer->start(50000/144);
+    Enemyattackingcreattimer->start(5000/144);
     connect(Enemyattackingcreattimer,&QTimer::timeout,this,&Widget::Enemyattckingmagic);
+
 
     Enemyattckingmovetimer=new QTimer(this);
     Enemyattckingmovetimer->start(900/144);
@@ -128,9 +135,21 @@ Widget::Widget(QWidget *parent)
         }
     });
 
+
+
     defensemagictimer=new QTimer(this);
     defensemagictimer->start(1000/144);
     connect(defensemagictimer,&QTimer::timeout,this,&Widget::normaldefensemagic);
+
+    defenseusedmagictimer=new QTimer(this);
+    defenseusedmagictimer->start(1000/144);
+    connect(defenseusedmagictimer,&QTimer::timeout,this,&Widget::defensemagic);
+    //connect(defensemagictimer,&QTimer::timeout,this,&Widget::fuxiandefensemagic);
+    //connect(defensemagictimer,&QTimer::timeout,this,&Widget::fuxiandefensemagicover);
+
+    Backgroundchangetimer=new QTimer(this);
+    Backgroundchangetimer->start(1000/144);
+    connect(Backgroundchangetimer,&QTimer::timeout,this,&Widget::backgroundchange);
 }
 
 Widget::~Widget()
@@ -160,8 +179,23 @@ void Widget::fufuMove()
             else
             {fufuplayer.fufu.moveBy(-fufu_Speed,0);break;}}
         case Qt::Key_D:{
-            if(fufuplayer.fufu.x()+fufu_Speed>798)
-            {fufuplayer.fufu.setX(798);
+            if(the_first)
+            {
+                if(fufuplayer.fufu.x()+fufu_Speed>450)
+                {fufuplayer.fufu.setX(450);
+                    for(int i=0;i<10;i++)
+                    {
+                        background[i].moveBy(-fufu_Speed,0);
+                    }
+                    mCloud.moveBy(-fufu_Speed,0);
+                    break;
+                }
+                else{fufuplayer.fufu.moveBy(fufu_Speed,0);break;}}
+            }
+            if(!the_first)
+            {
+                if(fufuplayer.fufu.x()+fufu_Speed>798)
+                {fufuplayer.fufu.setX(798);
                 for(int i=0;i<10;i++)
                 {
                     background[i].moveBy(-fufu_Speed,0);
@@ -169,10 +203,10 @@ void Widget::fufuMove()
                 mCloud.moveBy(-fufu_Speed,0);
                 break;
             }
-            else
-            {fufuplayer.fufu.moveBy(fufu_Speed,0);break;}}
-        }
+            else{fufuplayer.fufu.moveBy(fufu_Speed,0);break;}}
+            }
     }
+
 }
 
 void Widget::keyPressEvent(QKeyEvent *event)
@@ -232,20 +266,36 @@ void Widget::attckingmagiccontroller()
 
 void Widget::normalattackingmagic()
 {
-    if(facingside&&shoot&&attackingmagic_controller)
+    if(facingside&&shoot&&attackingmagic_controller&&!defense_condition&&!flying_condition)
     {
-        QPixmap img(":/bullet/bullet/bullets_003.png");
-        //QPixmap img(":/bullet/bullet/bullets_001.png");
-        QPoint pos(fufuplayer.fufu.x()+132,fufuplayer.fufu.y()+17);
+        //QPixmap img(":/bullet/bullet/bullets_003.png");
+        QPixmap img(":/bullet/bullet/bullet_007.png");
+        QPoint pos(fufuplayer.fufu.x()+182,fufuplayer.fufu.y()+17);
        // int randy=(rand()%660);
         //QPoint pos(fufuplayer.fufu.x()+132,randy);
         Bullet *bullet=new Bullet(pos,img,0);
         mScene.addItem(bullet);
         mBulletList_right.append(bullet);
     }
-    else if(!facingside&&shoot&&attackingmagic_controller)
+    else if(!facingside&&shoot&&attackingmagic_controller&&!defense_condition&&flying_condition)
     {
-        QPixmap img(":/bullet/bullet/bullets_001.png");
+        QPixmap img(":/bullet/bullet/bullet_007.png");
+        QPoint pos(fufuplayer.fufu.x()-100,fufuplayer.fufu.y()+30);
+        Bullet *bullet=new Bullet(pos,img,0);
+        mScene.addItem(bullet);
+        mBulletList_left.append(bullet);
+    }
+    else if(facingside&&shoot&&attackingmagic_controller&&!defense_condition&&flying_condition)
+    {
+        QPixmap img(":/bullet/bullet/bullet_007.png");
+        QPoint pos(fufuplayer.fufu.x()+270,fufuplayer.fufu.y()+30);
+        Bullet *bullet=new Bullet(pos,img,0);
+        mScene.addItem(bullet);
+        mBulletList_right.append(bullet);
+    }
+    else if(!facingside&&shoot&&attackingmagic_controller&&!defense_condition&&!flying_condition)
+    {
+        QPixmap img(":/bullet/bullet/bullet_007.png");
         QPoint pos(fufuplayer.fufu.x(),fufuplayer.fufu.y()+17);
         Bullet *bullet=new Bullet(pos,img,0);
         mScene.addItem(bullet);
@@ -302,9 +352,34 @@ void Widget::flyingmagic()
 
 void Widget::normaldefensemagic()
 {
-    if(defense_condition)
+    if(defense_condition&&facingside&&!flying_condition)
     {
-        QPoint _pos(fufuplayer.fufu.x()+150,fufuplayer.fufu.y()-20);
+        Defensemagic.setPixmap(QPixmap(":/bullet/bullet/defense_001.png"));
+        QPoint _pos(fufuplayer.fufu.x()+200,fufuplayer.fufu.y()-20);
+        Defensemagic.setPos(_pos);
+        mScene.addItem(&Defensemagic);
+        defense_switch=true;
+    }
+    else if(defense_condition&&!facingside&&!flying_condition)
+      {
+        Defensemagic.setPixmap(QPixmap(":/bullet/bullet/defense_003.png"));
+        QPoint _pos(fufuplayer.fufu.x(),fufuplayer.fufu.y()-20);
+        Defensemagic.setPos(_pos);
+        mScene.addItem(&Defensemagic);
+        defense_switch=true;
+       }
+    else if(defense_condition&&!facingside&&flying_condition)
+    {
+        Defensemagic.setPixmap(QPixmap(":/bullet/bullet/defense_003.png"));
+        QPoint _pos(fufuplayer.fufu.x()-40,fufuplayer.fufu.y()-20);
+        Defensemagic.setPos(_pos);
+        mScene.addItem(&Defensemagic);
+        defense_switch=true;
+    }
+    else if(defense_condition&&facingside&&flying_condition)
+    {
+        Defensemagic.setPixmap(QPixmap(":/bullet/bullet/defense_001.png"));
+        QPoint _pos(fufuplayer.fufu.x()+300,fufuplayer.fufu.y()-20);
         Defensemagic.setPos(_pos);
         mScene.addItem(&Defensemagic);
         defense_switch=true;
@@ -316,8 +391,45 @@ void Widget::normaldefensemagic()
     }
 }
 
+void Widget::flyingappearance()
+{
+    if(flying_condition&&facingside)
+    {
+        fufuplayer.fufu.setPixmap(QPixmap(":/player/Player/flying_condition_right.png"));
+    }
+    else if(flying_condition&&!facingside)
+    {
+        fufuplayer.fufu.setPixmap(QPixmap(":/player/Player/flying_condition_left.png"));
+    }
+    else if(!flying_condition&&facingside)
+    {
+        fufuplayer.fufu.setPixmap(QPixmap(":/player/Player/fufu_right_001.png"));
+    }
+    else if(!flying_condition&&!facingside)
+    {
+        fufuplayer.fufu.setPixmap(QPixmap(":/player/Player/fufu_left_001.png"));
+    }
+}
+
+void Widget::defensemagic()
+{
+    if(defense_condition)
+    {
+    for(int i=0;i<EnemyBulletList.size();i++)
+    {
+        if(EnemyBulletList[i]->collidesWithItem(&Defensemagic))
+        {
+            mScene.removeItem(EnemyBulletList[i]);
+            EnemyBulletList.removeOne(EnemyBulletList[i]);
+        }
+    }
+    }
+}
+
 void Widget::CreatEnemy()
 {
+    if(the_second)
+    {
     int rand_enemy_left=(rand()%4)+1;
     int rand_enemy_right=(rand()%4)+1;
     QString str1;
@@ -336,16 +448,140 @@ void Widget::CreatEnemy()
 
     mEnemyList_left.append(enemy1);
     mEnemyList_right.append(enemy2);
+    }
 }
 
 void Widget::Enemyattckingmagic()
 {
+    if(the_first&&start_condition)
+    {
     QPixmap img(":/bullet/bullet/bullets_001 (2).png");
     int randy=(rand()%660);
     QPoint pos(790,randy);
     Bullet *bullet=new Bullet(pos,img,0);
     mScene.addItem(bullet);
-    mBulletList_left.append(bullet);
+    EnemyBulletList.append(bullet);
+    }
+}
+
+void Widget::fuxiandefensemagic()
+{
+    if(the_first)
+    {
+    for(int i=0;i<mBulletList_right.size();i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            if(mBulletList_right[i]->collidesWithItem(&fuxiandefense))
+            {
+                mScene.addItem(&fuxiandefense);
+                fuxiandefense_condition[j]=true;
+                mScene.removeItem(mBulletList_right[i]);
+                mBulletList_right.removeOne(mBulletList_right[i]);
+            }
+        }
+    }
+    }
+}
+
+void Widget::fuxiandefensemagicover()
+{
+    for(int i=0;i<8;i++)
+    {
+        if(fuxiandefense_condition[i])
+        {
+            fuxiandefense_condition[i]=false;
+        }
+    }
+}
+
+void Widget::Collision_fuxian()
+{
+    if(the_first)
+    {
+    static int fuxian_life=10;
+    for(int i=0;i<mBulletList_right.size();i++)
+    {
+        if(mBulletList_right[i]->collidesWithItem(&fuxiandefense))
+        {
+            if(fufuplayer.fufu.y()>290)
+            {
+                int randm=(rand()%10);
+                if(randm==0)
+                {
+                    fuxian_life=fuxian_life-1;
+                }
+                mScene.removeItem(mBulletList_right[i]);
+                mBulletList_right.removeOne(mBulletList_right[i]);
+            }
+            else if(fufuplayer.fufu.y()<=290)
+            {
+                int randm=(rand()%3);
+                if(randm==0)
+                {
+                    fuxian_life=fuxian_life-1;
+                }
+                mScene.removeItem(mBulletList_right[i]);
+                mBulletList_right.removeOne(mBulletList_right[i]);
+            }
+        }
+       // qDebug()<<fuxian_life;
+    }
+    if(fuxian_life<=0)
+    {
+        the_second=true;
+        boss1->moveBy(-1280,0);
+        fuxiandefense.moveBy(-1280,0);
+        the_first=false;
+    }
+    }
+}
+
+void Widget::Collision_fufu()
+{
+    static int fufu_life=10;
+    for(int i=0;i<EnemyBulletList.size();i++)
+    {
+        if(fufuplayer.fufu.collidesWithItem(EnemyBulletList[i]))
+        {
+            mScene.removeItem(EnemyBulletList[i]);
+            EnemyBulletList.removeOne(EnemyBulletList[i]);
+            fufu_life=fufu_life-1;
+           // qDebug()<<fufu_life;
+        }
+    }
+}
+
+void Widget::start()
+{
+    start_condition=true;
+    if(the_first)
+    {
+    mScene.addItem(boss1);
+    fuxiandefense.setPixmap(QPixmap(":/bullet/bullet/defense_004.png"));
+    mScene.addItem(&fuxiandefense);
+    fuxiandefense.setPos(780,0);
+    }
+}
+
+void Widget::backgroundchange()
+{
+    if(!the_first&&the_second&&changeend)
+    {
+        for(int i=0;i<10;i++)
+        {
+            if(background[i].x()>=0&&background[i].x()<=1280)
+            {
+                background[i+1].setPixmap(QPixmap(":/background/Map/night_001.png"));
+                for(int j=i+2;j<10;j++)
+                {
+                    background[j].setPixmap(QPixmap(":/background/Map/night_002.png"));
+                }
+                changeend=false;
+                break;
+            }
+        }
+    }
 }
 
 

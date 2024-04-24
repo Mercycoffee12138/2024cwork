@@ -9,16 +9,18 @@
         <file>Map/background1.png</file>
         <file>Map/cloud1.png</file>
         <file>Map/start.png</file>
+        <file>Map/night_001.png</file>
+        <file>Map/night_002.png</file>
     </qresource>
     <qresource prefix="/bullet">
-        <file>bullet/bullets_001.png</file>
-        <file>bullet/bullets_001 (2).png</file>
-        <file>bullet/bullets_003.png</file>
-        <file>bullet/defense_001.png</file>
         <file>bullet/bullet_004.png</file>
         <file>bullet/bullet_005.png</file>
         <file>bullet/bullet_006.png</file>
         <file>bullet/bullet_007.png</file>
+        <file>bullet/bullets_001 (2).png</file>
+        <file>bullet/bullets_001.png</file>
+        <file>bullet/bullets_003.png</file>
+        <file>bullet/defense_001.png</file>
         <file>bullet/defense_002.png</file>
         <file>bullet/defense_003.png</file>
         <file>bullet/defense_004.png</file>
@@ -42,14 +44,10 @@
         <file>Enemy/fuxianplus.png</file>
     </qresource>
     <qresource prefix="/player">
-        <file>Player/fufu_right_001.png</file>
-        <file>Player/fufu_left_001.png</file>
         <file>Player/flying_condition_left.png</file>
         <file>Player/flying_condition_right.png</file>
-    </qresource>
-    <qresource prefix="/music">
-        <file>Music/bgm.mp3</file>
-        <file>Music/hit.wav</file>
+        <file>Player/fufu_left_001.png</file>
+        <file>Player/fufu_right_001.png</file>
     </qresource>
     <qresource prefix="/start">
         <file>start/ui_quit_hovered.png</file>

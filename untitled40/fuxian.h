@@ -4,12 +4,12 @@
 #include <QObject>
 #include<QGraphicsPixmapItem>
 
-class fuxian : public QObject
+class fuxian : public QGraphicsPixmapItem
 {
-    Q_OBJECT
+
 public:
     explicit fuxian(QObject *parent = nullptr);
-    QGraphicsPixmapItem killingmagicstarter;
+
 signals:
 };
 
