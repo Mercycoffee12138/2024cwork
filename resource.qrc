@@ -1,0 +1,62 @@
+<RCC>
+    <qresource prefix="/background">
+        <file>Map/1.png</file>
+        <file>Map/2.png</file>
+        <file>Map/3.png</file>
+        <file>Map/4.png</file>
+        <file>Map/5.png</file>
+        <file>Map/background.png</file>
+        <file>Map/background1.png</file>
+        <file>Map/cloud1.png</file>
+        <file>Map/start.png</file>
+    </qresource>
+    <qresource prefix="/bullet">
+        <file>bullet/bullets_001.png</file>
+        <file>bullet/bullets_001 (2).png</file>
+        <file>bullet/bullets_003.png</file>
+        <file>bullet/defense_001.png</file>
+        <file>bullet/bullet_004.png</file>
+        <file>bullet/bullet_005.png</file>
+        <file>bullet/bullet_006.png</file>
+        <file>bullet/bullet_007.png</file>
+        <file>bullet/defense_002.png</file>
+        <file>bullet/defense_003.png</file>
+        <file>bullet/defense_004.png</file>
+    </qresource>
+    <qresource prefix="/Enemy">
+        <file>Enemy/enemy_001.png</file>
+        <file>Enemy/enemy_001_left.png</file>
+        <file>Enemy/enemy_001_right.png</file>
+        <file>Enemy/enemy_002.png</file>
+        <file>Enemy/enemy_002_left.png</file>
+        <file>Enemy/enemy_002_new.png</file>
+        <file>Enemy/enemy_002_right.png</file>
+        <file>Enemy/enemy_003.png</file>
+        <file>Enemy/enemy_003_left.png</file>
+        <file>Enemy/enemy_003_right.png</file>
+        <file>Enemy/enemy_004.png</file>
+        <file>Enemy/enemy_004_left.png</file>
+        <file>Enemy/enemy_004_right.png</file>
+        <file>Enemy/enemy_005.png</file>
+        <file>Enemy/fuxian.png</file>
+        <file>Enemy/fuxianplus.png</file>
+    </qresource>
+    <qresource prefix="/player">
+        <file>Player/fufu_right_001.png</file>
+        <file>Player/fufu_left_001.png</file>
+        <file>Player/flying_condition_left.png</file>
+        <file>Player/flying_condition_right.png</file>
+    </qresource>
+    <qresource prefix="/music">
+        <file>Music/bgm.mp3</file>
+        <file>Music/hit.wav</file>
+    </qresource>
+    <qresource prefix="/start">
+        <file>start/ui_quit_hovered.png</file>
+        <file>start/ui_quit_idle.png</file>
+        <file>start/ui_quit_pushed.png</file>
+        <file>start/ui_start_hovered.png</file>
+        <file>start/ui_start_idle.png</file>
+        <file>start/ui_start_pushed.png</file>
+    </qresource>
+</RCC>
